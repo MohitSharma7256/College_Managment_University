@@ -4,6 +4,7 @@ import axios from "axios";
 import { FiUser, FiMail, FiPhone, FiMapPin, FiCalendar, FiDollarSign, FiUsers, FiBook } from "react-icons/fi";
 
 const baseApiURL = () => import.meta.env.VITE_APILINK || "http://localhost:4000/api";
+const baseServerURL = () => import.meta.env.VITE_SERVERLINK || "http://localhost:4000";
 
 const Dashboard = () => {
   const userData = useSelector((state) => state.userData);
@@ -98,6 +99,22 @@ const Dashboard = () => {
   const userType = localStorage.getItem("userType");
   const gradientClass = generateGradient(profile.firstName);
   const initials = `${profile.firstName?.charAt(0) || ''}${profile.lastName?.charAt(0) || ''}` || 'U';
+  
+  // Construct the proper image URL
+  const imageUrl = profile.profile 
+    ? `${baseServerURL()}/uploads/${profile.profile}`
+    : null;
+
+  // Format dates
+  const formatDate = (dateString) => {
+    if (!dateString) return 'N/A';
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 p-4 md:p-6">
@@ -107,9 +124,9 @@ const Dashboard = () => {
           <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
             <div className="relative">
               <div className={`w-24 h-24 md:w-32 md:h-32 rounded-full bg-gradient-to-r ${gradientClass} flex items-center justify-center text-white text-2xl md:text-3xl font-bold shadow-lg`}>
-                {profile.profileImage && !imageError ? (
+                {imageUrl && !imageError ? (
                   <img 
-                    src={profile.profileImage} 
+                    src={imageUrl} 
                     alt="Profile" 
                     className="w-full h-full rounded-full object-cover"
                     onError={handleImageError}
@@ -136,7 +153,7 @@ const Dashboard = () => {
                 </span>
               </div>
               <div className="inline-flex items-center px-4 py-2 bg-blue-100 text-blue-800 rounded-full text-sm font-medium">
-                {profile.role || userType.charAt(0).toUpperCase() + userType.slice(1)}
+                {profile.designation || profile.role || userType.charAt(0).toUpperCase() + userType.slice(1)}
               </div>
             </div>
           </div>
@@ -183,13 +200,13 @@ const Dashboard = () => {
                   </div>
                 </div>
               )}
-              {profile.dateOfBirth && (
+              {profile.dob && (
                 <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
                   <FiCalendar className="h-4 w-4 text-gray-500" />
                   <div>
                     <p className="text-sm text-gray-500">Date of Birth</p>
                     <p className="font-medium text-gray-900">
-                      {new Date(profile.dateOfBirth).toLocaleDateString()}
+                      {formatDate(profile.dob)}
                     </p>
                   </div>
                 </div>
@@ -200,7 +217,7 @@ const Dashboard = () => {
                   <div>
                     <p className="text-sm text-gray-500">Joining Date</p>
                     <p className="font-medium text-gray-900">
-                      {new Date(profile.joiningDate).toLocaleDateString()}
+                      {formatDate(profile.joiningDate)}
                     </p>
                   </div>
                 </div>
@@ -259,6 +276,12 @@ const Dashboard = () => {
                   <p className="font-medium text-gray-900">{profile.pincode}</p>
                 </div>
               )}
+              {profile.country && (
+                <div className="p-3 bg-gray-50 rounded-lg">
+                  <p className="text-sm text-gray-500 mb-1">Country</p>
+                  <p className="font-medium text-gray-900">{profile.country}</p>
+                </div>
+              )}
             </div>
           </div>
 
@@ -291,36 +314,28 @@ const Dashboard = () => {
             </div>
           )}
 
-          {/* Academic Information for Students */}
-          {userType === "student" && (
+          {/* Admin Specific Information */}
+          {userType === "admin" && (
             <div className="bg-white rounded-2xl shadow-lg p-6">
               <div className="flex items-center gap-3 mb-6">
                 <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
-                  <FiBook className="h-5 w-5 text-purple-600" />
+                  <FiUser className="h-5 w-5 text-purple-600" />
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900">Academic Information</h3>
+                <h3 className="text-xl font-semibold text-gray-900">Admin Information</h3>
               </div>
               <div className="space-y-4">
-                {profile.branch && (
+                {profile.designation && (
                   <div className="p-3 bg-gray-50 rounded-lg">
-                    <p className="text-sm text-gray-500 mb-1">Branch</p>
-                    <p className="font-medium text-gray-900">{profile.branch}</p>
+                    <p className="text-sm text-gray-500 mb-1">Designation</p>
+                    <p className="font-medium text-gray-900">{profile.designation}</p>
                   </div>
                 )}
-                <div className="grid grid-cols-2 gap-4">
-                  {profile.semester && (
-                    <div className="p-3 bg-gray-50 rounded-lg">
-                      <p className="text-sm text-gray-500 mb-1">Semester</p>
-                      <p className="font-medium text-gray-900">{profile.semester}</p>
-                    </div>
-                  )}
-                  {profile.year && (
-                    <div className="p-3 bg-gray-50 rounded-lg">
-                      <p className="text-sm text-gray-500 mb-1">Year</p>
-                      <p className="font-medium text-gray-900">{profile.year}</p>
-                    </div>
-                  )}
-                </div>
+                {profile.isSuperAdmin && (
+                  <div className="p-3 bg-blue-50 rounded-lg">
+                    <p className="text-sm text-blue-500 mb-1">Admin Type</p>
+                    <p className="font-medium text-blue-700">Super Administrator</p>
+                  </div>
+                )}
               </div>
             </div>
           )}
