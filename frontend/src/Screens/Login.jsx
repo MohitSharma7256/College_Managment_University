@@ -2,8 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { Toaster, toast } from "react-hot-toast";
-import { FiLogIn, FiEye, FiEyeOff } from "react-icons/fi";
-import CustomButton from "../components/CustomButton";
+import { FiLogIn, FiEye, FiEyeOff, FiUser, FiLock } from "react-icons/fi";
 import axiosWrapper from "../utils/AxiosWrapper";
 import { setUserToken, setUserData } from "../redux/actions";
 
@@ -16,77 +15,85 @@ const USER_TYPES = {
 
 // Login form component
 const LoginForm = ({ selected, onSubmit, formData, setFormData, showPassword, setShowPassword }) => (
-  <form className="card" onSubmit={onSubmit}>
-    <div className="mb-6">
-      <label htmlFor="email" style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>
-        {selected} Email
-      </label>
-      <input
-        type="email"
-        id="email"
-        required
-        className="form-control"
-        value={formData.email}
-        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-      />
-    </div>
-    <div className="mb-6">
-      <label htmlFor="password" style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>
-        Password
-      </label>
-      <div style={{ position: 'relative' }}>
-        <input
-          type={showPassword ? "text" : "password"}
-          id="password"
-          required
-          className="form-control"
-          value={formData.password}
-          onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-          style={{ paddingRight: '2.5rem' }}
-        />
-        <button
-          type="button"
-          onClick={() => setShowPassword(!showPassword)}
-          style={{
-            position: 'absolute',
-            right: '0.75rem',
-            top: '50%',
-            transform: 'translateY(-50%)',
-            background: 'none',
-            border: 'none',
-            cursor: 'pointer',
-            color: '#6b7280',
-            padding: '0.25rem'
-          }}
+  <div className="card shadow-lg" style={{ maxWidth: '400px', margin: '0 auto' }}>
+    <div className="card-body p-4">
+      <form onSubmit={onSubmit}>
+        <div className="mb-3">
+          <label htmlFor="email" className="form-label fw-medium">
+            {selected} Email
+          </label>
+          <div className="input-group">
+            <span className="input-group-text bg-light">
+              <FiUser className="text-muted" />
+            </span>
+            <input
+              type="email"
+              id="email"
+              required
+              className="form-control"
+              placeholder="Enter your email"
+              value={formData.email}
+              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+            />
+          </div>
+        </div>
+        
+        <div className="mb-3">
+          <label htmlFor="password" className="form-label fw-medium">
+            Password
+          </label>
+          <div className="input-group">
+            <span className="input-group-text bg-light">
+              <FiLock className="text-muted" />
+            </span>
+            <input
+              type={showPassword ? "text" : "password"}
+              id="password"
+              required
+              className="form-control"
+              placeholder="Enter your password"
+              value={formData.password}
+              onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="btn btn-outline-secondary"
+            >
+              {showPassword ? <FiEyeOff /> : <FiEye />}
+            </button>
+          </div>
+        </div>
+        
+        <div className="mb-3">
+          <Link
+            to="/forget-password"
+            className="text-decoration-none small"
+          >
+            Forgot Password?
+          </Link>
+        </div>
+        
+        <button 
+          type="submit" 
+          className="btn btn-primary w-100 py-2 fw-medium"
         >
-          {showPassword ? <FiEyeOff size={16} /> : <FiEye size={16} />}
+          <FiLogIn className="me-2" />
+          Sign In
         </button>
-      </div>
+      </form>
     </div>
-    <div className="mb-6">
-      <Link
-        to="/forget-password"
-        style={{ color: '#3b82f6', textDecoration: 'none', fontSize: '0.875rem' }}
-      >
-        Forgot Password?
-      </Link>
-    </div>
-    <button type="submit" className="btn btn-primary" style={{ width: '100%' }}>
-      <FiLogIn />
-      Login
-    </button>
-  </form>
+  </div>
 );
 
 // User type selector
 const UserTypeSelector = ({ selected, onSelect }) => (
-  <div className="flex justify-center gap-4 mb-6">
+  <div className="d-flex justify-content-center gap-2 mb-4">
     {Object.values(USER_TYPES).map((type) => (
       <button
         key={type}
         onClick={() => onSelect(type)}
-        className={selected === type ? "btn btn-primary" : "btn btn-secondary"}
-        style={{ minWidth: '80px' }}
+        className={`btn ${selected === type ? 'btn-primary' : 'btn-outline-primary'} btn-sm`}
       >
         {type}
       </button>
@@ -176,17 +183,25 @@ const Login = () => {
   }, [navigate]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: '#f8f9fa', padding: '1rem' }}>
-      <div className="container" style={{ maxWidth: '400px' }}>
-        <div className="text-center mb-6">
-          <h1 style={{ fontSize: '2rem', fontWeight: 'bold', marginBottom: '0.5rem', color: '#1f2937' }}>
+    <div className="min-vh-100 bg-light d-flex align-items-center justify-content-center p-4">
+      <div className="container-fluid" style={{ maxWidth: '500px' }}>
+        {/* Header */}
+        <div className="text-center mb-4">
+          <div className="d-inline-flex align-items-center justify-content-center bg-primary rounded-circle mb-3" style={{ width: '64px', height: '64px' }}>
+            <FiUser className="text-white" size={32} />
+          </div>
+          <h1 className="h2 fw-bold text-dark mb-2">
             College Management System
           </h1>
-          <p style={{ color: '#6b7280', fontSize: '1rem' }}>
-            {selected} Login
+          <p className="text-muted">
+            Sign in to your {selected.toLowerCase()} account
           </p>
         </div>
+
+        {/* User Type Selector */}
         <UserTypeSelector selected={selected} onSelect={handleUserTypeSelect} />
+
+        {/* Login Form */}
         <LoginForm
           selected={selected}
           onSubmit={handleSubmit}
@@ -195,8 +210,15 @@ const Login = () => {
           showPassword={showPassword}
           setShowPassword={setShowPassword}
         />
+
+        {/* Footer */}
+        <div className="text-center mt-4">
+          <p className="small text-muted">
+            Secure login powered by College Management System
+          </p>
+        </div>
       </div>
-      <Toaster position="bottom-center" />
+      <Toaster position="top-center" />
     </div>
   );
 };

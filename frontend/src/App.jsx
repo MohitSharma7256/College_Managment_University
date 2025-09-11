@@ -5,7 +5,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import AdminLayout from "./layouts/AdminLayout";
 import FacultyLayout from "./layouts/FacultyLayout";
 import StudentLayout from "./layouts/StudentLayout";
-import Login from "./Screens/Auth/Login";
+import Login from "./Screens/Login";
 import Register from "./Screens/Auth/Register";
 import ForgotPassword from "./Screens/Auth/ForgotPassword";
 import ResetPassword from "./Screens/Auth/ResetPassword";
@@ -22,6 +22,7 @@ const App = () => {
     <Router>
       <Toaster position="top-center" reverseOrder={false} />
       <Routes>
+        <Route path="/" element={<Login />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
