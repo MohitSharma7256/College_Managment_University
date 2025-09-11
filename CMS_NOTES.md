@@ -92,8 +92,8 @@ Password hashing is done using Mongoose pre-save hooks in the detail models.
 
 ### Default login IDs and passwords (from code/docs)
 - Seeded Admin (see `backend/seedData.js` and docs):
-  - Email: `admin@gmail.com`
-  - Password: `admin123`
+  - Email: `ms1361277@gmail.com`
+  - Password: `Mohit@123`
 - Default passwords assigned on creation:
   - Admin: `admin123`
   - Faculty: `faculty123`

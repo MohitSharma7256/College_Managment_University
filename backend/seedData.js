@@ -10,8 +10,8 @@ const seedData = async () => {
     // Clear existing admin data
     await adminDetails.deleteMany({});
 
-    const password = "admin123";
-    const employeeId = 123456;
+    const password = "Mohit@123";
+    const employeeId = 1361277;
 
     // Hash the password before storing
     const salt = await bcrypt.genSalt(10);
@@ -22,7 +22,7 @@ const seedData = async () => {
       firstName: "Mohit",
       middleName: "K",
       lastName: "Sharma",
-      email: "admin@gmail.com",
+      email: "ms1361277@gmail.com",
       phone: "1234567890",
       profile: "Faculty_Profile_123456.jpg",
       address: "123 College Street",

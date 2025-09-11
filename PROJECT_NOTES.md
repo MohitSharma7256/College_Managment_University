@@ -423,5 +423,5 @@ This document summarizes how the project is structured and how its features work
 <!-- seedData.js
  ✅
 Role: Production system initialization
-Creates: Default admin (admin@gmail.com / admin123)
+Creates: Default admin (ms1361277@gmail.com / Mohit@123)
 Status: Fixed with proper password hashing -->
