@@ -5,6 +5,7 @@ import { Toaster, toast } from "react-hot-toast";
 import { FiLogIn, FiEye, FiEyeOff } from "react-icons/fi";
 import CustomButton from "../components/CustomButton";
 import axiosWrapper from "../utils/AxiosWrapper";
+import { setUserToken, setUserData } from "../redux/actions";
 
 // User types for login
 const USER_TYPES = {
