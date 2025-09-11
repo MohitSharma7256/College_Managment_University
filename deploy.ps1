@@ -13,6 +13,7 @@ Write-Host "• Fixed Vite build configuration to output to 'dist' directory"
 Write-Host "• Created render.yaml for proper deployment"
 Write-Host "• Added _redirects for SPA routing"
 Write-Host "• Enhanced PORT configuration in backend"
+Write-Host "• FIXED: Updated index.html script path from main.jsx to index.js"
 
 Write-Host "`n📝 Next Steps:" -ForegroundColor Yellow
 Write-Host "1. Commit all changes to GitHub"
