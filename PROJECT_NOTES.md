@@ -417,3 +417,11 @@ Authorization: Bearer <jwt>
 
 
 This document summarizes how the project is structured and how its features work across the stack. Use it alongside README.md and SETUP_INSTRUCTIONS.md when setting up or extending the system.
+
+
+
+<!-- seedData.js
+ ✅
+Role: Production system initialization
+Creates: Default admin (admin@gmail.com / admin123)
+Status: Fixed with proper password hashing -->

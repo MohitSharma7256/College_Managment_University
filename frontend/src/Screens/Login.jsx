@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { FiLogIn } from "react-icons/fi";
-import axios from "axios";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
-import toast, { Toaster } from "react-hot-toast";
-import { setUserToken } from "../redux/actions";
 import { useDispatch } from "react-redux";
+import { Toaster, toast } from "react-hot-toast";
+import { FiLogIn, FiEye, FiEyeOff } from "react-icons/fi";
 import CustomButton from "../components/CustomButton";
 import axiosWrapper from "../utils/AxiosWrapper";
 
@@ -16,7 +14,7 @@ const USER_TYPES = {
 };
 
 // Login form component
-const LoginForm = ({ selected, onSubmit, formData, setFormData }) => (
+const LoginForm = ({ selected, onSubmit, formData, setFormData, showPassword, setShowPassword }) => (
   <form className="card" onSubmit={onSubmit}>
     <div className="mb-6">
       <label htmlFor="email" style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>
@@ -35,14 +33,34 @@ const LoginForm = ({ selected, onSubmit, formData, setFormData }) => (
       <label htmlFor="password" style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>
         Password
       </label>
-      <input
-        type="password"
-        id="password"
-        required
-        className="form-control"
-        value={formData.password}
-        onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-      />
+      <div style={{ position: 'relative' }}>
+        <input
+          type={showPassword ? "text" : "password"}
+          id="password"
+          required
+          className="form-control"
+          value={formData.password}
+          onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+          style={{ paddingRight: '2.5rem' }}
+        />
+        <button
+          type="button"
+          onClick={() => setShowPassword(!showPassword)}
+          style={{
+            position: 'absolute',
+            right: '0.75rem',
+            top: '50%',
+            transform: 'translateY(-50%)',
+            background: 'none',
+            border: 'none',
+            cursor: 'pointer',
+            color: '#6b7280',
+            padding: '0.25rem'
+          }}
+        >
+          {showPassword ? <FiEyeOff size={16} /> : <FiEye size={16} />}
+        </button>
+      </div>
     </div>
     <div className="mb-6">
       <Link
@@ -87,6 +105,7 @@ const Login = () => {
   });
 
   const [selected, setSelected] = useState(USER_TYPES.STUDENT);
+  const [showPassword, setShowPassword] = useState(false);
 
   // Set user type from URL params if available
   useEffect(() => {
@@ -172,6 +191,8 @@ const Login = () => {
           onSubmit={handleSubmit}
           formData={formData}
           setFormData={setFormData}
+          showPassword={showPassword}
+          setShowPassword={setShowPassword}
         />
       </div>
       <Toaster position="bottom-center" />
