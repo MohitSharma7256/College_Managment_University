@@ -3,7 +3,7 @@ import { baseApiURL } from "../baseUrl";
 
 // Axios instance with base configuration
 const axiosWrapper = axios.create({
-  baseURL: baseApiURL(),
+  baseURL: baseApiURL,
 });
 
 // Response interceptor for handling common errors
