@@ -15,74 +15,59 @@ const USER_TYPES = {
   ADMIN: "Admin",
 };
 
-// Login form component - could be moved to separate file later
+// Login form component
 const LoginForm = ({ selected, onSubmit, formData, setFormData }) => (
-  <form
-    className="w-full p-8 bg-white rounded-2xl shadow-xl border border-gray-200"
-    onSubmit={onSubmit}
-  >
+  <form className="card" onSubmit={onSubmit}>
     <div className="mb-6">
-      <label
-        className="block text-gray-800 text-sm font-medium mb-2"
-        htmlFor="email"
-      >
+      <label htmlFor="email" style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>
         {selected} Email
       </label>
       <input
         type="email"
         id="email"
         required
-        className="w-full px-4 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="form-control"
         value={formData.email}
         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
       />
     </div>
     <div className="mb-6">
-      <label
-        className="block text-gray-800 text-sm font-medium mb-2"
-        htmlFor="password"
-      >
+      <label htmlFor="password" style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>
         Password
       </label>
       <input
         type="password"
         id="password"
         required
-        className="w-full px-4 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="form-control"
         value={formData.password}
         onChange={(e) => setFormData({ ...formData, password: e.target.value })}
       />
     </div>
-    <div className="flex items-center justify-between mb-6">
+    <div className="mb-6">
       <Link
-        className="text-sm text-blue-600 hover:underline"
         to="/forget-password"
+        style={{ color: '#3b82f6', textDecoration: 'none', fontSize: '0.875rem' }}
       >
         Forgot Password?
       </Link>
     </div>
-    <CustomButton
-      type="submit"
-      className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 px-4 rounded-lg transition duration-200 flex justify-center items-center gap-2"
-    >
+    <button type="submit" className="btn btn-primary" style={{ width: '100%' }}>
+      <FiLogIn />
       Login
-      <FiLogIn className="text-lg" />
-    </CustomButton>
+    </button>
   </form>
 );
 
-// User type selector - TODO: Add icons for each type
+// User type selector
 const UserTypeSelector = ({ selected, onSelect }) => (
-  <div className="flex justify-center gap-4 mb-8">
+  <div className="flex justify-center gap-4 mb-6">
     {Object.values(USER_TYPES).map((type) => (
       <button
         key={type}
         onClick={() => onSelect(type)}
-        className={`px-5 py-2 text-sm font-medium rounded-full transition duration-200 ${
-          selected === type
-            ? "bg-blue-600 text-white shadow"
-            : "bg-gray-100 text-gray-800 hover:bg-gray-200"
-        }`}
+        className={selected === type ? "btn btn-primary" : "btn btn-secondary"}
+        style={{ minWidth: '80px' }}
       >
         {type}
       </button>
@@ -171,11 +156,16 @@ const Login = () => {
   }, [navigate]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-tr from-gray-100 via-white to-gray-100 flex items-center justify-center px-4">
-      <div className="w-full max-w-2xl lg:w-1/2 px-6 py-12">
-        <h1 className="text-4xl font-bold text-gray-800 text-center mb-6">
-          {selected} Login
-        </h1>
+    <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: '#f8f9fa', padding: '1rem' }}>
+      <div className="container" style={{ maxWidth: '400px' }}>
+        <div className="text-center mb-6">
+          <h1 style={{ fontSize: '2rem', fontWeight: 'bold', marginBottom: '0.5rem', color: '#1f2937' }}>
+            College Management System
+          </h1>
+          <p style={{ color: '#6b7280', fontSize: '1rem' }}>
+            {selected} Login
+          </p>
+        </div>
         <UserTypeSelector selected={selected} onSelect={handleUserTypeSelect} />
         <LoginForm
           selected={selected}
