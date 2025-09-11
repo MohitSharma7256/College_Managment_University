@@ -1,6 +1,7 @@
 const adminDetails = require("./models/details/admin-details.model");
 const connectToMongo = require("./database/db");
 const mongoose = require("mongoose");
+const bcrypt = require("bcryptjs");
 
 const seedData = async () => {
   try {
@@ -12,10 +13,14 @@ const seedData = async () => {
     const password = "admin123";
     const employeeId = 123456;
 
+    // Hash the password before storing
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
     const adminDetail = {
       employeeId: employeeId,
       firstName: "Mohit",
-      middleName: "R",
+      middleName: "K",
       lastName: "Sharma",
       email: "admin@gmail.com",
       phone: "1234567890",
@@ -38,7 +43,7 @@ const seedData = async () => {
         phone: "9876543210",
       },
       bloodGroup: "O+",
-      password: password,
+      password: hashedPassword,
     };
 
     await adminDetails.create(adminDetail);
