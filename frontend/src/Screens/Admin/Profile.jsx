@@ -1,10 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import UpdatePasswordLoggedIn from "../../components/UpdatePasswordLoggedIn";
 import CustomButton from "../../components/CustomButton";
 
 const Profile = ({ profileData }) => {
   const [showUpdatePasswordModal, setShowUpdatePasswordModal] = useState(false);
   const [imageError, setImageError] = useState(false);
+  const [mediaBaseUrl, setMediaBaseUrl] = useState("");
+  
+  // Get media base URL from environment variable with fallback
+  useEffect(() => {
+    const mediaLink = process.env.REACT_APP_MEDIA_LINK || "http://localhost:4000";
+    setMediaBaseUrl(mediaLink);
+  }, []);
   
   if (!profileData) return null;
 
@@ -27,35 +34,46 @@ const Profile = ({ profileData }) => {
     return `${profileData.firstName?.charAt(0) || ''}${profileData.lastName?.charAt(0) || ''}`;
   };
 
-  // Construct the image URL
-  const imageUrl = profileData.profile 
-    ? `${process.env.REACT_APP_MEDIA_LINK}/${profileData.profile}`
-    : null;
+  // Construct the image URL safely
+  const getImageUrl = () => {
+    if (!profileData.profile) return null;
+    
+    // If profile already contains a full URL, use it directly
+    if (profileData.profile.startsWith('http')) {
+      return profileData.profile;
+    }
+    
+    // Otherwise, construct the URL using the base URL
+    return `${mediaBaseUrl}/${profileData.profile}`;
+  };
+
+  const imageUrl = getImageUrl();
 
   return (
     <div className="max-w-6xl mx-auto p-8">
       {/* Header Section */}
-      <div className="flex items-center justify-between gap-8 mb-12 border-b pb-8">
-        <div className="flex items-center gap-8">
+      <div className="flex flex-col md:flex-row items-center justify-between gap-8 mb-12 border-b pb-8">
+        <div className="flex flex-col md:flex-row items-center gap-8">
           <div className="relative">
-            <div className="w-40 h-40 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center text-white text-4xl font-bold ring-4 ring-blue-500 ring-offset-4">
+            <div className="w-32 h-32 md:w-40 md:h-40 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center text-white text-4xl font-bold ring-4 ring-blue-500 ring-offset-4">
               {imageUrl && !imageError ? (
                 <img
                   src={imageUrl}
                   alt="Profile"
                   className="w-full h-full rounded-full object-cover"
                   onError={handleImageError}
+                  onLoad={() => setImageError(false)}
                 />
               ) : (
-                <span>{getInitials()}</span>
+                <span className="text-3xl md:text-4xl">{getInitials()}</span>
               )}
             </div>
             {profileData.status === 'active' && (
-              <div className="absolute bottom-2 right-2 w-6 h-6 bg-green-500 rounded-full border-2 border-white"></div>
+              <div className="absolute bottom-2 right-2 w-5 h-5 md:w-6 md:h-6 bg-green-500 rounded-full border-2 border-white"></div>
             )}
           </div>
-          <div>
-            <h1 className="text-4xl font-bold text-gray-900 mb-2">
+          <div className="text-center md:text-left mt-4 md:mt-0">
+            <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
               {`${profileData.firstName} ${profileData.lastName}`}
             </h1>
             <p className="text-lg text-gray-600 mb-1">
@@ -67,17 +85,19 @@ const Profile = ({ profileData }) => {
             </p>
           </div>
         </div>
-        <CustomButton onClick={() => setShowUpdatePasswordModal(true)}>
-          Update Password
-        </CustomButton>
-        {showUpdatePasswordModal && (
-          <UpdatePasswordLoggedIn
-            onClose={() => setShowUpdatePasswordModal(false)}
-          />
-        )}
+        <div className="mt-6 md:mt-0">
+          <CustomButton onClick={() => setShowUpdatePasswordModal(true)}>
+            Update Password
+          </CustomButton>
+          {showUpdatePasswordModal && (
+            <UpdatePasswordLoggedIn
+              onClose={() => setShowUpdatePasswordModal(false)}
+            />
+          )}
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-12">
+      <div className="grid grid-cols-1 gap-8 md:gap-12">
         {/* Personal Information */}
         <div className="bg-white rounded-lg shadow-md p-6">
           <h2 className="text-2xl font-bold text-gray-900 mb-6 pb-2 border-b border-gray-200">
@@ -192,7 +212,7 @@ const Profile = ({ profileData }) => {
                 </p>
               </div>
               <div>
-                <label className="text-sm font-medium text-gray-500">
+                <label className="textsm font-medium text-gray-500">
                   Relationship
                 </label>
                 <p className="text-gray-900 capitalize">
@@ -209,6 +229,17 @@ const Profile = ({ profileData }) => {
           </div>
         )}
       </div>
+      
+      {/* Debug information (remove in production) */}
+      {process.env.NODE_ENV === 'development' && (
+        <div className="mt-8 p-4 bg-gray-100 rounded-lg">
+          <h3 className="text-lg font-semibold mb-2">Debug Information</h3>
+          <p>Media Base URL: {mediaBaseUrl}</p>
+          <p>Profile Image Path: {profileData.profile}</p>
+          <p>Constructed Image URL: {imageUrl}</p>
+          <p>Image Error: {imageError ? 'Yes' : 'No'}</p>
+        </div>
+      )}
     </div>
   );
 };
