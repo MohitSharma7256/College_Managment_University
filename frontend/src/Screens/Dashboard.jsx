@@ -9,6 +9,7 @@ const Dashboard = () => {
   const userData = useSelector((state) => state.userData);
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [imageError, setImageError] = useState(false);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -44,6 +45,32 @@ const Dashboard = () => {
     }
   }, [userData]);
 
+  const handleImageError = () => {
+    setImageError(true);
+  };
+
+  // Function to generate a gradient based on user's name
+  const generateGradient = (name) => {
+    if (!name) return 'from-blue-600 to-indigo-600';
+    
+    const colors = [
+      'from-blue-600 to-indigo-600',
+      'from-purple-600 to-pink-600',
+      'from-green-600 to-teal-600',
+      'from-yellow-600 to-orange-600',
+      'from-red-600 to-pink-600',
+      'from-indigo-600 to-purple-600'
+    ];
+    
+    // Simple hash function to get consistent color based on name
+    let hash = 0;
+    for (let i = 0; i < name.length; i++) {
+      hash = name.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    
+    return colors[Math.abs(hash) % colors.length];
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -69,6 +96,8 @@ const Dashboard = () => {
   }
 
   const userType = localStorage.getItem("userType");
+  const gradientClass = generateGradient(profile.firstName);
+  const initials = `${profile.firstName?.charAt(0) || ''}${profile.lastName?.charAt(0) || ''}` || 'U';
 
   return (
     <div className="min-h-screen bg-gray-50 p-4 md:p-6">
@@ -77,15 +106,16 @@ const Dashboard = () => {
         <div className="bg-white rounded-2xl shadow-lg p-6 md:p-8 mb-6">
           <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
             <div className="relative">
-              <div className="w-24 h-24 md:w-32 md:h-32 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 flex items-center justify-center text-white text-2xl md:text-3xl font-bold shadow-lg">
-                {profile.profileImage ? (
+              <div className={`w-24 h-24 md:w-32 md:h-32 rounded-full bg-gradient-to-r ${gradientClass} flex items-center justify-center text-white text-2xl md:text-3xl font-bold shadow-lg`}>
+                {profile.profileImage && !imageError ? (
                   <img 
                     src={profile.profileImage} 
                     alt="Profile" 
                     className="w-full h-full rounded-full object-cover"
+                    onError={handleImageError}
                   />
                 ) : (
-                  <span>{profile.firstName?.charAt(0) || 'U'}</span>
+                  <span className="text-3xl md:text-4xl font-medium">{initials}</span>
                 )}
               </div>
               <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-green-500 rounded-full border-4 border-white flex items-center justify-center">
