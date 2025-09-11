@@ -4,6 +4,8 @@ import CustomButton from "../../components/CustomButton";
 
 const Profile = ({ profileData }) => {
   const [showUpdatePasswordModal, setShowUpdatePasswordModal] = useState(false);
+  const [imageError, setImageError] = useState(false);
+  
   if (!profileData) return null;
 
   const formatDate = (dateString) => {
@@ -14,16 +16,44 @@ const Profile = ({ profileData }) => {
     });
   };
 
+  // Function to handle image loading errors
+  const handleImageError = () => {
+    setImageError(true);
+  };
+
+  // Generate initials from name
+  const getInitials = () => {
+    if (!profileData.firstName && !profileData.lastName) return 'U';
+    return `${profileData.firstName?.charAt(0) || ''}${profileData.lastName?.charAt(0) || ''}`;
+  };
+
+  // Construct the image URL
+  const imageUrl = profileData.profile 
+    ? `${process.env.REACT_APP_MEDIA_LINK}/${profileData.profile}`
+    : null;
+
   return (
     <div className="max-w-6xl mx-auto p-8">
       {/* Header Section */}
       <div className="flex items-center justify-between gap-8 mb-12 border-b pb-8">
         <div className="flex items-center gap-8">
-          <img
-            src={`${process.env.REACT_APP_MEDIA_LINK}/${profileData.profile}`}
-            alt="Profile"
-            className="w-40 h-40 rounded-full object-cover ring-4 ring-blue-500 ring-offset-4"
-          />
+          <div className="relative">
+            <div className="w-40 h-40 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center text-white text-4xl font-bold ring-4 ring-blue-500 ring-offset-4">
+              {imageUrl && !imageError ? (
+                <img
+                  src={imageUrl}
+                  alt="Profile"
+                  className="w-full h-full rounded-full object-cover"
+                  onError={handleImageError}
+                />
+              ) : (
+                <span>{getInitials()}</span>
+              )}
+            </div>
+            {profileData.status === 'active' && (
+              <div className="absolute bottom-2 right-2 w-6 h-6 bg-green-500 rounded-full border-2 border-white"></div>
+            )}
+          </div>
           <div>
             <h1 className="text-4xl font-bold text-gray-900 mb-2">
               {`${profileData.firstName} ${profileData.lastName}`}
@@ -100,7 +130,9 @@ const Profile = ({ profileData }) => {
               <label className="text-sm font-medium text-gray-500">
                 Status
               </label>
-              <p className="text-gray-900 capitalize">{profileData.status}</p>
+              <p className={`capitalize ${profileData.status === 'active' ? 'text-green-600' : 'text-red-600'}`}>
+                {profileData.status}
+              </p>
             </div>
             <div>
               <label className="text-sm font-medium text-gray-500">Role</label>
@@ -147,33 +179,35 @@ const Profile = ({ profileData }) => {
         </div>
 
         {/* Emergency Contact */}
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6 pb-2 border-b border-gray-200">
-            Emergency Contact
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div>
-              <label className="text-sm font-medium text-gray-500">Name</label>
-              <p className="text-gray-900">
-                {profileData.emergencyContact.name}
-              </p>
-            </div>
-            <div>
-              <label className="text-sm font-medium text-gray-500">
-                Relationship
-              </label>
-              <p className="text-gray-900">
-                {profileData.emergencyContact.relationship}
-              </p>
-            </div>
-            <div>
-              <label className="text-sm font-medium text-gray-500">Phone</label>
-              <p className="text-gray-900">
-                {profileData.emergencyContact.phone}
-              </p>
+        {profileData.emergencyContact && (
+          <div className="bg-white rounded-lg shadow-md p-6">
+            <h2 className="text-2xl font-bold text-gray-900 mb-6 pb-2 border-b border-gray-200">
+              Emergency Contact
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div>
+                <label className="text-sm font-medium text-gray-500">Name</label>
+                <p className="text-gray-900">
+                  {profileData.emergencyContact.name}
+                </p>
+              </div>
+              <div>
+                <label className="text-sm font-medium text-gray-500">
+                  Relationship
+                </label>
+                <p className="text-gray-900 capitalize">
+                  {profileData.emergencyContact.relationship}
+                </p>
+              </div>
+              <div>
+                <label className="text-sm font-medium text-gray-500">Phone</label>
+                <p className="text-gray-900">
+                  {profileData.emergencyContact.phone}
+                </p>
+              </div>
             </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );
