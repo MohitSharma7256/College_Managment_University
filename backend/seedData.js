@@ -13,10 +13,6 @@ const seedData = async () => {
     const password = "Mohit@123";
     const employeeId = 1361277;
 
-    // Hash the password before storing
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
-
     const adminDetail = {
       employeeId: employeeId,
       firstName: "Mohit",
@@ -24,7 +20,7 @@ const seedData = async () => {
       lastName: "Sharma",
       email: "ms1361277@gmail.com",
       phone: "1234567890",
-      profile: "Faculty_Profile_123456.jpg",
+      profile: "",
       address: "123 College Street",
       city: "College City",
       state: "State",
@@ -43,7 +39,7 @@ const seedData = async () => {
         phone: "9876543210",
       },
       bloodGroup: "O+",
-      password: hashedPassword,
+      password: password,
     };
 
     await adminDetails.create(adminDetail);
