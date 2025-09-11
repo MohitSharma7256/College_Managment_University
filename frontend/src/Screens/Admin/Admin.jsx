@@ -232,10 +232,11 @@ const Admin = () => {
   };
 
   return (
-    <div className="w-full mx-auto mt-10 flex justify-center items-start flex-col mb-10 relative">
-      <div className="flex justify-between items-center w-full">
-        <Heading title="Admin Management" />
-        <CustomButton
+    <div className="container" style={{ marginTop: '2rem', marginBottom: '2rem' }}>
+      <div className="flex justify-between items-center" style={{ marginBottom: '2rem' }}>
+        <h1 style={{ fontSize: '2rem', fontWeight: 'bold', color: '#1f2937' }}>Admin Management</h1>
+        <button
+          className="btn btn-primary"
           onClick={() => {
             if (showAddForm) {
               resetForm();
@@ -244,20 +245,47 @@ const Admin = () => {
             }
           }}
         >
-          <IoMdAdd className="text-2xl" />
-        </CustomButton>
+          <IoMdAdd />
+          Add Admin
+        </button>
       </div>
 
       {showAddForm && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-8 w-[90%] max-w-4xl max-h-[90vh] overflow-y-auto relative">
+        <div style={{ 
+          position: 'fixed', 
+          top: 0, 
+          left: 0, 
+          right: 0, 
+          bottom: 0, 
+          backgroundColor: 'rgba(0,0,0,0.5)', 
+          display: 'flex', 
+          alignItems: 'center', 
+          justifyContent: 'center', 
+          zIndex: 1000 
+        }}>
+          <div className="card" style={{ 
+            width: '90%', 
+            maxWidth: '800px', 
+            maxHeight: '90vh', 
+            overflow: 'auto', 
+            position: 'relative' 
+          }}>
             <button
               onClick={resetForm}
-              className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 p-1 rounded-full hover:bg-gray-100 transition-colors"
+              style={{
+                position: 'absolute',
+                top: '1rem',
+                right: '1rem',
+                background: 'none',
+                border: 'none',
+                cursor: 'pointer',
+                padding: '0.5rem',
+                borderRadius: '50%'
+              }}
             >
-              <IoMdClose className="text-2xl" />
+              <IoMdClose size={24} />
             </button>
-            <h2 className="text-2xl font-semibold mb-6">
+            <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '1.5rem' }}>
               {isEditing ? "Edit Admin" : "Add New Admin"}
             </h2>
             <form
@@ -266,21 +294,21 @@ const Admin = () => {
                 addAdminHandler();
               }}
             >
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1rem' }}>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>
                     Profile Photo
                   </label>
                   <input
                     type="file"
                     onChange={(e) => setFile(e.target.files[0])}
-                    className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="form-control"
                     accept="image/*"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>
                     First Name
                   </label>
                   <input
@@ -289,7 +317,7 @@ const Admin = () => {
                     onChange={(e) =>
                       handleInputChange("firstName", e.target.value)
                     }
-                    className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="form-control"
                     required
                   />
                 </div>
@@ -563,24 +591,24 @@ const Admin = () => {
                 </div>
               </div>
 
-              <div className="mt-8 flex justify-between items-center gap-4">
+              <div style={{ marginTop: '2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '1rem' }}>
                 <div>
-                  <p className="text-sm">
+                  <p style={{ fontSize: '0.875rem' }}>
                     Default password will be{" "}
-                    <span className="font-bold">admin123</span>
+                    <span style={{ fontWeight: 'bold' }}>admin123</span>
                   </p>
                 </div>
-                <div className="flex gap-4">
-                  <CustomButton
+                <div style={{ display: 'flex', gap: '1rem' }}>
+                  <button
                     type="button"
-                    variant="secondary"
+                    className="btn btn-secondary"
                     onClick={resetForm}
                   >
                     Cancel
-                  </CustomButton>
-                  <CustomButton type="submit" variant="primary">
+                  </button>
+                  <button type="submit" className="btn btn-primary">
                     {isEditing ? "Update Admin" : "Add Admin"}
-                  </CustomButton>
+                  </button>
                 </div>
               </div>
             </form>
@@ -591,20 +619,20 @@ const Admin = () => {
       {dataLoading && <Loading />}
 
       {!dataLoading && !showAddForm && (
-        <div className="mt-8 w-full">
-          <table className="text-sm min-w-full bg-white">
+        <div style={{ marginTop: '2rem', width: '100%' }}>
+          <table className="card" style={{ width: '100%', fontSize: '0.875rem' }}>
             <thead>
-              <tr className="bg-blue-500 text-white">
-                <th className="py-4 px-6 text-left font-semibold">Name</th>
-                <th className="py-4 px-6 text-left font-semibold">Email</th>
-                <th className="py-4 px-6 text-left font-semibold">Phone</th>
-                <th className="py-4 px-6 text-left font-semibold">
+              <tr style={{ backgroundColor: '#3b82f6', color: 'white' }}>
+                <th style={{ padding: '1rem', textAlign: 'left', fontWeight: 'bold' }}>Name</th>
+                <th style={{ padding: '1rem', textAlign: 'left', fontWeight: 'bold' }}>Email</th>
+                <th style={{ padding: '1rem', textAlign: 'left', fontWeight: 'bold' }}>Phone</th>
+                <th style={{ padding: '1rem', textAlign: 'left', fontWeight: 'bold' }}>
                   Employee ID
                 </th>
-                <th className="py-4 px-6 text-left font-semibold">
+                <th style={{ padding: '1rem', textAlign: 'left', fontWeight: 'bold' }}>
                   Designation
                 </th>
-                <th className="py-4 px-6 text-center font-semibold">Actions</th>
+                <th style={{ padding: '1rem', textAlign: 'center', fontWeight: 'bold' }}>Actions</th>
               </tr>
             </thead>
             <tbody>
